@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Family & Consumer Science | FCS Overview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="darkmode.css" />
+  <script>
+    try { var saved = localStorage.getItem('fcsTheme'); } catch (e) {}
+    document.documentElement.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  </script>
+  <style>
+    .lesson-box { background: var(--surface-white); border-color: var(--terracotta); }
+    .lesson-box h4 i { color: var(--terracotta); }
+    .lesson-embed { position: relative; width: 100%; padding-top: 56.25%; margin-bottom: 1rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); background: var(--bg-cream); }
+    .lesson-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .lesson-html { font-size: 0.95rem; line-height: 1.7; margin-bottom: 1rem; }
+    .lesson-html h1, .lesson-html h2, .lesson-html h3 { margin: 1rem 0 0.5rem; }
+    .lesson-html ul, .lesson-html ol { margin: 0.5rem 0 0.5rem 1.25rem; }
+    .lesson-html img { max-width: 100%; height: auto; border-radius: 8px; }
+    .lesson-placeholder { text-align: center; padding: 2rem 1rem; border: 2px dashed var(--border-color); border-radius: 10px; color: var(--text-muted); background: var(--bg-cream); }
+    .lesson-placeholder i { font-size: 1.75rem; color: var(--terracotta); margin-bottom: 0.5rem; display: block; }
+    .lesson-placeholder strong { color: var(--text-dark); display: block; margin-bottom: 0.25rem; }
+    .lesson-download { display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none; width: auto; padding: 0.55rem 1.1rem; font-size: 0.88rem; }
+    .submit-box { background: var(--surface-white); border-color: var(--sage); }
+    .submit-box h4 i, .submit-hint i { color: var(--sage); }
+    .submit-box .input-group { margin-bottom: 1rem; }
+    .submit-task { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0.9rem; }
+    .submit-hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.9rem; display: flex; gap: 0.5rem; align-items: flex-start; }
+    .submit-hint i { margin-top: 0.2rem; }
+    .submit-status { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 50px; margin-bottom: 1rem; }
+    .submit-status.pending { background: var(--terracotta-light); color: var(--terracotta-dark); }
+    .submit-status.done { background: var(--sage-light); color: var(--sage-dark); }
+    .submit-btn { width: auto; padding: 0.6rem 1.4rem; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .submit-btn:disabled { opacity: 0.6; cursor: wait; }
+    .submit-msg { display: none; font-size: 0.88rem; font-weight: 600; margin-bottom: 0.85rem; padding: 0.6rem 0.85rem; border-radius: 8px; }
+    .submit-msg.error { display: block; background: var(--terracotta-light); color: var(--terracotta-dark); border: 1px solid var(--terracotta); }
+    .submit-msg.success { display: block; background: var(--sage-light); color: var(--sage-dark); border: 1px solid var(--sage); }
+    .submit-msg.info { display: block; background: var(--bg-cream); color: var(--text-muted); border: 1px solid var(--border-color); }
+    .file-chip { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; background: var(--bg-cream); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 1rem; font-size: 0.9rem; }
+    .file-chip i { font-size: 1.3rem; }
+    .file-chip i.fa-file-pdf { color: var(--terracotta); }
+    .file-chip i.fa-file-image { color: var(--sage); }
+    .file-chip span { flex: 1; min-width: 140px; word-break: break-all; }
+    .view-file-btn { background: var(--sage); color: #fff; border: none; border-radius: 6px; padding: 0.35rem 0.85rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .view-file-btn:hover { background: var(--sage-dark); }
+    .submit-preview img { max-width: 100%; max-height: 220px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem; display: block; }
+    .complete-day-btn:disabled:not(.is-completed) { opacity: 0.55; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="brand"><i class="fa-solid fa-utensils"></i><span>Family & Consumer Science</span></div>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#curriculum">Curriculum</a>
+        <a href="#tools">Interactive Tools</a>
+        <a href="#tasks">Performance Tasks</a>
+        <a href="login.html" id="navAuthLink" class="nav-btn">Login / Register</a>
+        <button type="button" id="themeToggle" class="theme-toggle" aria-label="Switch to dark mode"><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="overview">
+    <div class="hero-container">
+      <span class="badge"><i class="fa-solid fa-graduation-cap"></i> Lesson Breakdown & Guide</span>
+      <h1 class="hero-title">Family & Consumer Science</h1>
+      <p class="hero-subtitle">A comprehensive guide to hospitality, tourism fundamentals, food safety standards, culinary tools, napkin art, and practical kitchen conversions.</p>
+      <div class="standards-grid" id="standardsGrid"></div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <section class="section" id="curriculum">
+      <div class="section-header">
+        <span class="subhead">10-Week Learning Journey</span>
+        <h2>Curriculum & Activity Modules</h2>
+        <p>Select an unlocked module to open its Day Tabs and complete each lesson in order.</p>
+      </div>
+
+      <div class="progress-tracker">
+        <div class="progress-info">
+          <span><strong>Overall Course Progress:</strong> <span id="progressText">0 of 10 Days Completed</span></span>
+          <button type="button" id="resetProgressBtn" class="reset-btn"><i class="fa-solid fa-rotate-left"></i> Reset Progress</button>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <div id="modulesOverviewView">
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="all">All Modules</button>
+          <button class="filter-btn" data-filter="hospitality">Hospitality & Tourism</button>
+          <button class="filter-btn" data-filter="safety">Food Safety & HACCP</button>
+          <button class="filter-btn" data-filter="tools">Tools & Care</button>
+          <button class="filter-btn" data-filter="service">Table Service & Nutrition</button>
+        </div>
+        <div class="modules-grid" id="modulesGridContainer"></div>
+      </div>
+
+      <div id="moduleDetailView" class="module-workspace" style="display: none;">
+        <div class="workspace-topbar">
+          <button type="button" id="backToModulesBtn" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to All Modules</button>
+          <span class="workspace-status" id="workspaceStatusPill">In Progress</span>
+        </div>
+        <div class="workspace-header">
+          <div class="workspace-meta">
+            <span class="week-pill" id="wsModuleBadge"></span>
+            <span class="cat-tag" id="wsCategoryTag"></span>
+          </div>
+          <h2 id="wsModuleTitle"></h2>
+          <p id="wsModuleCompetency"></p>
+        </div>
+        <div class="workspace-day-tabs" id="wsDayTabs"></div>
+        <div class="workspace-day-content" id="wsDayContent"></div>
+      </div>
+    </section>
+
+    <section class="section" id="tools">
+      <div class="section-header">
+        <span class="subhead">Interactive Reference Tools</span>
+        <h2>Practical Kitchen Utilities</h2>
+      </div>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-title">
+            <i class="fa-solid fa-calculator terracotta-icon"></i>
+            <div><h3>Recipe Measurement Converter</h3><p>Convert common kitchen units instantly.</p></div>
+          </div>
+          <div class="converter-box">
+            <div class="input-group">
+              <label for="convertVal">Amount</label>
+              <input type="number" id="convertVal" value="1" min="0" step="any" />
+            </div>
+            <div class="input-group">
+              <label for="convertFrom">From</label>
+              <select id="convertFrom"></select>
+            </div>
+            <div class="input-group">
+              <label for="convertTo">To</label>
+              <select id="convertTo"></select>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="convertBtn">Calculate Conversion</button>
+          <div class="result-box" id="conversionResult"></div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-title">
+            <i class="fa-solid fa-shield-virus sage-icon"></i>
+            <div><h3>7 HACCP Food Safety Principles</h3><p>Click any principle to view details.</p></div>
+          </div>
+          <div class="accordion" id="haccpList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="tasks">
+      <div class="section-header">
+        <span class="subhead">Practical Assessment</span>
+        <h2>Suggested Performance Tasks</h2>
+      </div>
+      <div class="tasks-grid" id="tasksGrid"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Family & Consumer Science (FCS) Practical Course Guide & Learning Hub</p>
+  </footer>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const pad = n => String(n).padStart(2, '0');
+    const esc = s => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const list = (items, fn) => items.map(fn).join('');
+
+    const TOTAL_DAYS = 10;
+    const MAX_FILE_BYTES = 650 * 1024;
+
+    const modulesData = [
+      ['mod1', 'Module 01', 'hospitality', 'Hospitality', 'Hospitality & Tourism Fundamentals', 'Differentiate hospitality and tourism; distinguish tourism forms and tourist profiles.', [
+        [1, 'Core Concepts & Tourist Profiles', 'Explore the relationship between hospitality services and tourism sectors.', ['Concept Sort: Hospitality vs. Tourism', 'Travel Experience Breakdown', 'Tourist Persona Creation Workshop']]]],
+      ['mod2', 'Module 02', 'hospitality', 'Hospitality', 'Sectors & Career Opportunities', 'Explain hospitality scope and identify career and entrepreneurial paths.', [
+        [2, 'Industry Sectors & Career Pathways', 'Map out accommodation, food & beverage, and event management opportunities.', ['Sector Mapping (Accommodation, F&B, Events)', 'Career Path Explorer & Pitch', 'Hospitality Services Walkthrough']]]],
+      ['mod3', 'Module 03', 'hospitality', 'Hospitality', 'Industry Trends & Innovations', 'Examine challenges, current trends, and innovations in the sector.', [
+        [3, 'Sustainability & Modern Hospitality Tech', 'Analyze modern challenges, eco-friendly practices, and guest experience tech.', ['Industry Trends & Challenges Analysis', 'Innovation Spotlight (Sustainability & Tech)']]]],
+      ['mod4', 'Module 04', 'safety', 'Food Prep', 'Food Preparation Fundamentals', 'Discuss core fundamentals of food preparation and kitchen workflows.', [
+        [4, 'Mise en Place & Kitchen Flow', 'Learn foundational prep workflows from station setup to final plating.', ['Kitchen Practices & Demonstration', 'Kitchen-to-Table Flow Sequencing']]]],
+      ['mod5', 'Week 05', 'safety', 'Food Safety', 'HACCP Food Safety Principles', 'Recognize and apply the 7 principles of HACCP in food service.', [
+        [5, 'Hazard Analysis & Critical Control Points', 'Apply biological, chemical, and physical hazard prevention in kitchen environments.', ['HACCP 7 Principles Drill', 'Real-World Scenario Analysis']]]],
+      ['mod6', 'Weeks 06 - 07', 'tools', 'Kitchen Tools', 'Kitchen Tools, Care & Maintenance', 'Identify equipment functions, proper cleaning, sanitization, and maintenance.', [
+        [6, 'Kitchen Tool Identification & Classification', 'Master measuring, cutting, mixing, and cooking tools and their safe handling.', ['Name That Kitchen Tool Game', 'Tool Classification & Safe Handling Drill']],
+        [7, 'Sanitization & Equipment Maintenance', 'Practice proper three-compartment sink sanitization and preventive care.', ['Cleaning & Sanitizing Demonstration', 'Equipment Maintenance Checklist']]]],
+      ['mod7', 'Week 08', 'service', 'Table Service', 'Table Napkin Folding Techniques', 'Demonstrate classic table napkin folds for formal and informal setups.', [
+        [8, 'Classic & Formal Napkin Art', 'Fold crisp pyramid, bishop’s hat, fan, and rose napkin designs for dining setups.', ['Step-by-Step Folding Demonstrations', 'Precision Table Presentation Challenge']]]],
+      ['mod8', 'Week 09', 'service', 'Nutrition', 'Food Selection & Healthy Nutrition', 'Understand principles of balanced meal planning and safe food handling.', [
+        [9, 'Balanced Meal Planning & Food Selection', 'Evaluate ingredient freshness and design nutritionally balanced meals.', ['Healthy Plate Balanced Meal Design', 'Food Prep Do’s & Don’ts Checklist']]]],
+      ['mod9', 'Week 10', 'service', 'Measurements', 'Culinary Unit Conversions', 'Convert units of measurement accurately for recipe adjustments.', [
+        [10, 'Recipe Scaling & Measurement Accuracy', 'Convert between teaspoons, tablespoons, cups, milliliters, and grams.', ['Measurement Conversion Relay', 'Real-Life Recipe Scaling Exercise']]]]
+    ].map(([id, badge, category, categoryLabel, title, competency, days]) => ({
+      id, badge, category, categoryLabel, title, competency,
+      days: days.map(([dayNum, t, summary, activities]) => ({ dayNum, title: `Day ${pad(dayNum)}: ${t}`, summary, activities }))
+    }));
+
+    const lessonContent = {
+      1: { file: 'https://uou.ac.in/sites/default/files/slm/ETS-102.pdf' }
+    };
+
+    const standards = [
+      ['sage', 'fa-shield-halved', 'Performance Standard', 'Apply essential skills in food preparation and services following safety precautions and industry standards.'],
+      ['terracotta', 'fa-concierge-bell', 'Content Standard', 'Demonstrate a clear understanding of the core fundamentals, sectors, and operations within the hospitality and tourism industry.']
+    ];
+
+    const haccp = [
+      ['Conduct a Hazard Analysis', 'Identify biological, chemical, or physical hazards in food preparation steps.'],
+      ['Determine Critical Control Points (CCPs)', 'Find steps where control can be applied to prevent or eliminate safety hazards.'],
+      ['Establish Critical Limits', 'Set minimum/maximum boundaries (e.g., internal cooking temp of 165°F / 74°C for poultry).'],
+      ['Establish Monitoring Procedures', 'Regularly check and log temperature and safety controls.'],
+      ['Establish Corrective Actions', 'Define steps to take when a critical limit is violated (e.g., re-cooking or discarding food).'],
+      ['Establish Verification Procedures', 'Review logs and audit procedures to confirm HACCP systems work effectively.'],
+      ['Establish Record-Keeping Systems', 'Maintain precise documentation of safety checks, monitoring, and logs.']
+    ];
+
+    const tasks = [
+      ['', 'Individual Task', 'Safe Snack Preparation', 'Prepare a simple healthy snack or dish (e.g., sandwich, fruit salad, or cold wrap) independently.',
+        ['Proper personal hygiene & apron wear', 'Safe handling of kitchen tools & knives', 'Cleanliness during & after preparation']],
+      ['sage-badge', 'Group Task', 'Table Setting & Service Activity', 'Collaboratively arrange a formal or casual dining setup in small groups and demonstrate proper food service.',
+        ['Accurate placement of utensils, plates & glassware', 'Neat table napkin folding presentation', 'Group teamwork and smooth service flow']]
+    ];
+
+    const units = [['tbsp', 'Tablespoons (tbsp)'], ['tsp', 'Teaspoons (tsp)'], ['cup', 'Cups'], ['ml', 'Milliliters (ml)'], ['g', 'Grams (g)'], ['kg', 'Kilograms (kg)']];
+    const mlPer = { tsp: 4.92892, tbsp: 14.7868, cup: 240, ml: 1, g: 1, kg: 1000 };
+
+    let completedDays = JSON.parse(localStorage.getItem('fcsCompletedDays')) || [];
+    let submissions = JSON.parse(localStorage.getItem('fcsSubmissions')) || {};
+    let currentFilter = 'all';
+    let activeModuleId = null;
+    let activeDayNum = null;
+
+    const hasSubmission = n => !!(submissions[n] && submissions[n].fileName);
+    const formatFileSize = b => typeof b !== 'number' ? '' : b < 1048576 ? `${Math.max(1, Math.round(b / 1024))} KB` : `${(b / 1048576).toFixed(1)} MB`;
+    const highestDay = () => completedDays.length ? Math.min(Math.max(...completedDays) + 1, TOTAL_DAYS) : 1;
+    const isModUnlocked = mod => mod.days[0].dayNum <= highestDay();
+    const isModDone = mod => mod.days.every(d => completedDays.includes(d.dayNum));
+
+    async function detectFileKind(file) {
+      const name = file.name.toLowerCase();
+      const head = new Uint8Array(await file.slice(0, 1024).arrayBuffer());
+      if (head[0] === 0xFF && head[1] === 0xD8 && head[2] === 0xFF && /\.jpe?g$/.test(name)) return 'jpeg';
+      if (String.fromCharCode(...head).includes('%PDF') && /\.pdf$/.test(name)) return 'pdf';
+      return null;
+    }
+
+    async function compressJpeg(file, maxBytes) {
+      const bitmap = await createImageBitmap(file);
+      let scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+      let quality = 0.85;
+      for (let i = 0; i < 14; i++) {
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+        canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', quality));
+        if (blob && blob.size <= maxBytes) { bitmap.close?.(); return blob; }
+        if (quality > 0.5) quality -= 0.1; else scale *= 0.8;
+      }
+      bitmap.close?.();
+      return null;
+    }
+
+    const blobToBase64 = blob => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).split(',')[1]);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+
+    async function openSubmissionFile(dayNum) {
+      const popup = window.open('', '_blank');
+      try {
+        const data = await window.fetchSubmissionFile(dayNum);
+        if (!data) throw new Error('File not found.');
+        const bytes = Uint8Array.from(atob(data.fileData), c => c.charCodeAt(0));
+        const url = URL.createObjectURL(new Blob([bytes], { type: data.fileType }));
+        if (popup) popup.location.href = url;
+        else Object.assign(document.createElement('a'), { href: url, download: data.fileName || 'submission' }).click();
+      } catch (err) {
+        popup?.close();
+        alert('Could not open the file: ' + err.message);
+      }
+    }
+
+    function lessonSection(day) {
+      const c = lessonContent[day.dayNum] || {};
+      const embed = (src, title) => `<div class="lesson-embed"><iframe src="${src}" allowfullscreen loading="lazy" title="${title}"></iframe></div>`;
+      const body = (c.slides ? embed(c.slides, 'Lesson slides') : '')
+        + (c.video ? embed(c.video, 'Lesson video') : '')
+        + (c.html ? `<div class="lesson-html">${c.html}</div>` : '')
+        + (c.file ? `<a href="${c.file}" target="_blank" rel="noopener" class="btn btn-primary lesson-download"><i class="fa-solid fa-file-arrow-down"></i> Open Lesson File</a>` : '')
+        || `<div class="lesson-placeholder"><i class="fa-solid fa-book-open-reader"></i><strong>Lesson for Day ${pad(day.dayNum)} coming soon</strong>Your teacher will add the lesson slides, video and notes here.</div>`;
+      return `<div class="ws-activities-box lesson-box"><h4><i class="fa-solid fa-chalkboard-user"></i> Lesson Content</h4>${body}</div>`;
+    }
+
+    function submissionSection(day, isDone) {
+      const sub = hasSubmission(day.dayNum) ? submissions[day.dayNum] : null;
+      const task = (lessonContent[day.dayNum] || {}).task || 'Submit the output of today’s activities as a JPEG photo or a PDF file.';
+      const when = sub && sub.submittedAt ? new Date(sub.submittedAt).toLocaleString() : '';
+      const status = sub
+        ? `<span class="submit-status done"><i class="fa-solid fa-circle-check"></i> Submitted ${esc(when)}</span>`
+        : `<span class="submit-status pending"><i class="fa-solid fa-hourglass-half"></i> Required before you can continue</span>`;
+      const chip = sub ? `
+        <div class="file-chip">
+          <i class="fa-solid ${sub.fileType === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image'}"></i>
+          <span>${esc(sub.fileName)} &middot; ${esc(formatFileSize(sub.fileSize))}</span>
+          <button type="button" class="view-file-btn" data-day="${day.dayNum}"><i class="fa-solid fa-eye"></i> View</button>
+        </div>` : '';
+
+      if (isDone && sub) {
+        return `<div class="ws-activities-box submit-box"><h4><i class="fa-solid fa-folder-open"></i> Your Submitted Output</h4>${status}${chip}</div>`;
+      }
+      return `
+        <div class="ws-activities-box submit-box">
+          <h4><i class="fa-solid fa-upload"></i> Submit Your Output</h4>
+          <p class="submit-task">${esc(task)}</p>
+          <p class="submit-hint"><i class="fa-solid fa-circle-info"></i><span>Accepted files: <strong>JPEG (.jpg / .jpeg)</strong> or <strong>PDF</strong> only. Maximum ${Math.round(MAX_FILE_BYTES / 1024)} KB. Large photos are shrunk automatically; PDFs must already be under the limit.</span></p>
+          ${status}${chip}
+          <div class="input-group">
+            <label for="submitFileInput">${sub ? 'Replace with a new file' : 'Choose your file'}</label>
+            <input type="file" id="submitFileInput" accept=".jpg,.jpeg,.pdf,image/jpeg,application/pdf" />
+          </div>
+          <div id="submitPreview" class="submit-preview"></div>
+          <div id="submitMsg" class="submit-msg"></div>
+          <button type="button" class="btn btn-primary submit-btn" id="submitOutputBtn">
+            <i class="fa-solid fa-paper-plane"></i> ${sub ? 'Replace Submission' : 'Submit Output'}
+          </button>
+        </div>`;
+    }
+
+    function updateGlobalProgress() {
+      $('progressFill').style.width = `${(completedDays.length / TOTAL_DAYS) * 100}%`;
+      $('progressText').innerText = `${completedDays.length} of ${TOTAL_DAYS} Days Completed`;
+    }
+
+    function renderModulesGrid() {
+      const box = $('modulesGridContainer');
+      box.innerHTML = '';
+      modulesData.forEach((mod, i) => {
+        if (currentFilter !== 'all' && mod.category !== currentFilter) return;
+        const open = isModUnlocked(mod), done = isModDone(mod);
+        const days = mod.days.map(d => `Day ${pad(d.dayNum)}`).join(' & ');
+        const status = done ? '<span class="status-tag completed"><i class="fa-solid fa-circle-check"></i> Completed</span>'
+          : open ? `<span class="status-tag unlocked"><i class="fa-solid fa-unlock"></i> Unlocked (${days})</span>`
+          : `<span class="status-tag locked"><i class="fa-solid fa-lock"></i> Finish ${modulesData[i - 1].badge} First</span>`;
+        const label = done ? '<i class="fa-solid fa-eye"></i> Review Module & Materials'
+          : open ? `<i class="fa-solid fa-arrow-right-to-bracket"></i> Open Module (${days})`
+          : '<i class="fa-solid fa-lock"></i> Locked';
+
+        const card = document.createElement('div');
+        card.className = `module-card ${open ? '' : 'card-locked'} ${done ? 'card-completed' : ''}`;
+        card.innerHTML = `
+          <div class="card-meta"><span class="week-pill">${mod.badge}</span><span class="cat-tag">${mod.categoryLabel}</span></div>
+          <h3>${mod.title}</h3>
+          <p class="competency">${mod.competency}</p>
+          <div class="module-status-row">${status}</div>
+          <button type="button" class="open-module-btn ${open ? '' : 'is-locked'} ${done ? 'is-completed' : ''}" ${open ? '' : 'disabled'}>${label}</button>`;
+        if (open) card.querySelector('.open-module-btn').onclick = () => openModuleWorkspace(mod.id);
+        box.appendChild(card);
+      });
+    }
+
+    function openModuleWorkspace(moduleId) {
+      if (!window.fcsUser) {
+        alert('Please log in to your student account first before accessing module lessons.');
+        location.href = 'login.html';
+        return;
+      }
+      const mod = modulesData.find(m => m.id === moduleId);
+      if (!mod || !isModUnlocked(mod)) return;
+      activeModuleId = moduleId;
+      const next = mod.days.find(d => !completedDays.includes(d.dayNum) && d.dayNum <= highestDay());
+      activeDayNum = (next || mod.days[0]).dayNum;
+      $('modulesOverviewView').style.display = 'none';
+      $('moduleDetailView').style.display = 'block';
+      renderWorkspace();
+      $('curriculum').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeModuleWorkspace() {
+      activeModuleId = activeDayNum = null;
+      $('moduleDetailView').style.display = 'none';
+      $('modulesOverviewView').style.display = 'block';
+      renderModulesGrid();
+    }
+
+    function renderWorkspace() {
+      const mod = modulesData.find(m => m.id === activeModuleId);
+      if (!mod) return;
+      const high = highestDay(), modDone = isModDone(mod);
+
+      $('wsModuleBadge').innerText = mod.badge;
+      $('wsCategoryTag').innerText = mod.categoryLabel;
+      $('wsModuleTitle').innerText = mod.title;
+      $('wsModuleCompetency').innerText = mod.competency;
+      const pill = $('workspaceStatusPill');
+      pill.className = `workspace-status ${modDone ? 'completed' : 'in-progress'}`;
+      pill.innerHTML = modDone ? '<i class="fa-solid fa-circle-check"></i> Module Completed' : '<i class="fa-solid fa-spinner"></i> In Progress';
+
+      const tabs = $('wsDayTabs');
+      tabs.innerHTML = '';
+      mod.days.forEach(d => {
+        const done = completedDays.includes(d.dayNum), open = d.dayNum <= high;
+        const tab = document.createElement('button');
+        tab.type = 'button';
+        tab.className = `ws-day-tab ${d.dayNum === activeDayNum ? 'active' : ''} ${done ? 'completed' : ''} ${open ? '' : 'locked'}`;
+        tab.innerHTML = `<i class="fa-solid ${done ? 'fa-circle-check' : open ? 'fa-unlock' : 'fa-lock'}"></i> Day ${pad(d.dayNum)}`;
+        tab.onclick = () => {
+          if (!open) return alert(`Please finish Day ${pad(d.dayNum - 1)} first to unlock Day ${pad(d.dayNum)}.`);
+          activeDayNum = d.dayNum;
+          renderWorkspace();
+        };
+        tabs.appendChild(tab);
+      });
+
+      const day = mod.days.find(d => d.dayNum === activeDayNum);
+      const n = day.dayNum, dayDone = completedDays.includes(n);
+      const next = modulesData[modulesData.indexOf(mod) + 1];
+      const last = mod.days[mod.days.length - 1].dayNum === n;
+
+      let action;
+      if (dayDone && last) {
+        action = `
+          <div class="day-completed-banner">
+            <div>${next
+              ? `<strong><i class="fa-solid fa-circle-check"></i> ${mod.badge} Finished!</strong><p>You have unlocked <strong>${next.badge}: ${next.title}</strong>.</p>`
+              : '<strong><i class="fa-solid fa-award"></i> Congratulations!</strong><p>You have completed all 10 days of the Family & Consumer Science curriculum!</p>'}</div>
+            <button type="button" class="btn btn-primary next-mod-btn" id="nextBtn">${next ? `Proceed to ${next.badge} <i class="fa-solid fa-arrow-right"></i>` : 'Return to Overview'}</button>
+          </div>`;
+      } else if (dayDone) {
+        action = `<button type="button" class="complete-day-btn is-completed" disabled><i class="fa-solid fa-circle-check"></i> Day ${pad(n)} Completed</button>`;
+      } else if (!hasSubmission(n)) {
+        action = `<button type="button" class="complete-day-btn" disabled><i class="fa-solid fa-lock"></i> Submit your output above to complete Day ${pad(n)}</button>`;
+      } else {
+        action = `<button type="button" class="complete-day-btn" id="completeCurrentDayBtn"><i class="fa-solid fa-check"></i> Complete Day ${pad(n)} ${last ? '& Finish Module' : '& Unlock Next Day'}</button>`;
+      }
+
+      $('wsDayContent').innerHTML = `
+        <div class="ws-day-card">
+          <h3>${day.title}</h3>
+          <p class="ws-day-summary">${day.summary}</p>
+          <div class="ws-activities-box">
+            <h4>Required Activities & Checklist:</h4>
+            <ul class="activity-list">${list(day.activities, a => `<li><i class="fa-solid fa-check"></i> ${a}</li>`)}</ul>
+          </div>
+          ${lessonSection(day)}
+          ${submissionSection(day, dayDone)}
+          <div class="ws-action-footer">${action}</div>
+        </div>`;
+
+      document.querySelectorAll('.view-file-btn').forEach(b => b.onclick = () => openSubmissionFile(Number(b.dataset.day)));
+
+      const fileInput = $('submitFileInput');
+      if (fileInput) {
+        fileInput.onchange = () => {
+          const preview = $('submitPreview'), msg = $('submitMsg'), f = fileInput.files[0];
+          preview.innerHTML = '';
+          msg.className = 'submit-msg';
+          if (!f) return;
+          const name = f.name.toLowerCase();
+          if (!/\.(jpe?g|pdf)$/.test(name)) {
+            msg.textContent = 'Only JPEG (.jpg, .jpeg) or PDF files are allowed.';
+            msg.className = 'submit-msg error';
+          } else if (/\.jpe?g$/.test(name)) {
+            preview.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Preview of selected photo">`;
+          } else {
+            preview.innerHTML = `<div class="file-chip"><i class="fa-solid fa-file-pdf"></i><span>${esc(f.name)} &middot; ${esc(formatFileSize(f.size))}</span></div>`;
+          }
+        };
+
+        $('submitOutputBtn').onclick = async function () {
+          const btn = this, msg = $('submitMsg'), file = fileInput.files[0];
+          const say = (text, type) => { msg.textContent = text; msg.className = `submit-msg ${type}`; };
+          if (!file) return say('Please choose a JPEG or PDF file first.', 'error');
+          const kind = await detectFileKind(file);
+          if (!kind) return say('Only real JPEG (.jpg, .jpeg) or PDF files are allowed. Other formats (PNG, Word, PowerPoint, etc.) are not accepted.', 'error');
+
+          btn.disabled = true;
+          say('Processing and uploading your file...', 'info');
+          try {
+            let blob = file;
+            if (file.size > MAX_FILE_BYTES) {
+              if (kind === 'pdf') throw new Error(`This PDF is ${formatFileSize(file.size)}. The maximum is ${Math.round(MAX_FILE_BYTES / 1024)} KB. Please compress it (for example with a free online PDF compressor) or submit a JPEG photo instead.`);
+              blob = await compressJpeg(file, MAX_FILE_BYTES);
+              if (!blob) throw new Error('This photo is too large even after shrinking. Please use a smaller photo.');
+            }
+            const meta = {
+              fileName: file.name,
+              fileType: kind === 'pdf' ? 'application/pdf' : 'image/jpeg',
+              fileSize: blob.size,
+              moduleId: mod.id,
+              submittedAt: new Date().toISOString()
+            };
+            await window.uploadSubmission(n, meta, await blobToBase64(blob));
+            submissions[n] = meta;
+            localStorage.setItem('fcsSubmissions', JSON.stringify(submissions));
+            await window.saveProgressToFirebase?.();
+            renderWorkspace();
+            const m = $('submitMsg');
+            if (m) { m.textContent = 'Output submitted! You can now complete this day.'; m.className = 'submit-msg success'; }
+          } catch (err) {
+            console.error(err);
+            say('Could not submit: ' + (err.message || 'unknown error'), 'error');
+            btn.disabled = false;
+          }
+        };
+      }
+
+      const completeBtn = $('completeCurrentDayBtn');
+      if (completeBtn) {
+        completeBtn.onclick = () => {
+          if (!hasSubmission(n)) return alert('Please submit your output for this day first.');
+          if (completedDays.includes(n)) return;
+          completedDays.push(n);
+          localStorage.setItem('fcsCompletedDays', JSON.stringify(completedDays));
+          window.saveProgressToFirebase?.();
+          updateGlobalProgress();
+          const nextDay = mod.days.find(d => d.dayNum === n + 1);
+          if (nextDay) activeDayNum = nextDay.dayNum;
+          renderWorkspace();
+        };
+      }
+
+      const nextBtn = $('nextBtn');
+      if (nextBtn) nextBtn.onclick = () => next ? openModuleWorkspace(next.id) : closeModuleWorkspace();
+    }
+
+    function convertUnits() {
+      const val = parseFloat($('convertVal').value) || 0;
+      const from = $('convertFrom').value, to = $('convertTo').value;
+      $('conversionResult').innerText = `${val} ${from} = ${(val * mlPer[from] / mlPer[to]).toFixed(2)} ${to}`;
+    }
+
+    $('standardsGrid').innerHTML = list(standards, ([color, icon, title, text]) => `
+      <div class="standard-card">
+        <div class="card-icon ${color}"><i class="fa-solid ${icon}"></i></div>
+        <div><h3>${title}</h3><p>${text}</p></div>
+      </div>`);
+
+    $('haccpList').innerHTML = list(haccp, ([t, d], i) => `<details><summary>${i + 1}. ${t}</summary><p>${d}</p></details>`);
+
+    $('tasksGrid').innerHTML = list(tasks, ([cls, badge, title, text, items]) => `
+      <div class="task-card">
+        <div class="task-badge ${cls}">${badge}</div>
+        <h3>${title}</h3>
+        <p>${text}</p>
+        <div class="task-checklist">
+          <h4>Evaluation Criteria:</h4>
+          <ul>${list(items, i => `<li><i class="fa-regular fa-circle-check"></i> ${i}</li>`)}</ul>
+        </div>
+      </div>`);
+
+    $('convertFrom').innerHTML = $('convertTo').innerHTML = list(units, ([v, l]) => `<option value="${v}">${l}</option>`);
+    $('convertTo').value = 'tsp';
+    $('convertBtn').onclick = convertUnits;
+    ['input', 'change'].forEach(ev => ['convertVal', 'convertFrom', 'convertTo'].forEach(id => $(id).addEventListener(ev, convertUnits)));
+    convertUnits();
+
+    $('backToModulesBtn').onclick = closeModuleWorkspace;
+
+    $('resetProgressBtn').onclick = () => {
+      if (!confirm('Reset all progress back to Module 01 (Day 01)?')) return;
+      completedDays = [];
+      localStorage.removeItem('fcsCompletedDays');
+      window.saveProgressToFirebase?.();
+      updateGlobalProgress();
+      closeModuleWorkspace();
+    };
+
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.onclick = () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      renderModulesGrid();
+    });
+
+    const root = document.documentElement, themeBtn = $('themeToggle');
+    function applyTheme(theme) {
+      root.dataset.theme = theme;
+      try { localStorage.setItem('fcsTheme', theme); } catch (e) {}
+      const dark = theme === 'dark';
+      themeBtn.innerHTML = `<i class="fa-solid ${dark ? 'fa-sun' : 'fa-moon'}"></i>`;
+      themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    applyTheme(root.dataset.theme || 'light');
+    requestAnimationFrame(() => root.classList.add('theme-ready'));
+    themeBtn.onclick = () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+
+    window.fcsApp = {
+      get completedDays() { return completedDays; },
+      set completedDays(v) { completedDays = v; },
+      get submissions() { return submissions; },
+      set submissions(v) { submissions = v; },
+      updateGlobalProgress,
+      renderModulesGrid
+    };
+
+    updateGlobalProgress();
+    renderModulesGrid();
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const app = initializeApp({
+      apiKey: "AIzaSyA0snl6gZzyX3S6KLwosy33o6r7HaqYFlA",
+      authDomain: "aysete-977b1.firebaseapp.com",
+      projectId: "aysete-977b1",
+      storageBucket: "aysete-977b1.firebasestorage.app",
+      messagingSenderId: "766545115988",
+      appId: "1:766545115988:web:d87af7d588af35008f66c1",
+      measurementId: "G-YT62C60KE7"
+    });
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const fcs = window.fcsApp;
+
+    const requireUser = () => {
+      if (!auth.currentUser) throw new Error('You are not signed in.');
+      return auth.currentUser;
+    };
+
+    window.saveProgressToFirebase = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+      try {
+        await setDoc(doc(db, "studentProgress", user.uid), {
+          studentName: user.displayName || '',
+          email: user.email || '',
+          completedDays: fcs.completedDays,
+          submissions: fcs.submissions,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+        return true;
+      } catch (err) {
+        console.error('Could not save progress:', err);
+        return false;
+      }
+    };
+
+    window.uploadSubmission = async (dayNum, meta, base64) => {
+      const user = requireUser();
+      const id = `${user.uid}_day${dayNum}`;
+      const batch = writeBatch(db);
+      batch.set(doc(db, "submissions", id), {
+        uid: user.uid,
+        studentName: user.displayName || '',
+        email: user.email || '',
+        dayNum,
+        moduleId: meta.moduleId,
+        fileName: meta.fileName,
+        fileType: meta.fileType,
+        fileSize: meta.fileSize,
+        submittedAt: meta.submittedAt
+      });
+      batch.set(doc(db, "submissionFiles", id), {
+        uid: user.uid,
+        dayNum,
+        fileName: meta.fileName,
+        fileType: meta.fileType,
+        fileData: base64
+      });
+      await batch.commit();
+    };
+
+    window.fetchSubmissionFile = async (dayNum) => {
+      const snap = await getDoc(doc(db, "submissionFiles", `${requireUser().uid}_day${dayNum}`));
+      return snap.exists() ? snap.data() : null;
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      const link = document.getElementById('navAuthLink');
+      window.fcsUser = user;
+
+      if (!user) {
+        link.innerHTML = 'Login / Register';
+        link.href = 'login.html';
+        return;
+      }
+
+      link.innerHTML = `<i class="fa-solid fa-user-check"></i> ${user.displayName || user.email} (Logout)`;
+      link.href = '#';
+      link.onclick = async (e) => {
+        e.preventDefault();
+        if (confirm('Sign out of your student account?')) {
+          await signOut(auth);
+          location.reload();
+        }
+      };
+
+      try {
+        const snap = await getDoc(doc(db, "studentProgress", user.uid));
+        const data = snap.exists() ? snap.data() : {};
+        fcs.completedDays = data.completedDays || [];
+        fcs.submissions = data.submissions || {};
+      } catch (err) {
+        console.error('Could not load progress:', err);
+      }
+      fcs.updateGlobalProgress();
+      fcs.renderModulesGrid();
+    });
+  </script>
+</body>
+</html>

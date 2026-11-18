@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher | Student Submissions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="darkmode.css" />
+  <script>
+    try { var saved = localStorage.getItem('fcsTheme'); } catch (e) {}
+    document.documentElement.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  </script>
+  <style>
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .toolbar { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end; margin-bottom: 1.25rem; }
+    .toolbar .input-group { min-width: 180px; }
+    .toolbar .btn { width: auto; padding: 0.65rem 1.1rem; }
+    .table-wrap { overflow-x: auto; background: var(--surface-white); border: 1px solid var(--border-color); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+    th { background: var(--sage-light); color: var(--sage-dark); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    tr:last-child td { border-bottom: none; }
+    td.file { white-space: normal; word-break: break-all; min-width: 160px; }
+    .act-btn { border: none; border-radius: 6px; padding: 0.35rem 0.8rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-right: 0.35rem; }
+    .act-view { background: var(--sage); color: #fff; }
+    .act-view:hover { background: var(--sage-dark); }
+    .act-dl { background: var(--terracotta-light); color: var(--terracotta-dark); }
+    .act-dl:hover { background: var(--terracotta); color: #fff; }
+    .notice { padding: 1rem 1.25rem; border-radius: 10px; margin-bottom: 1.25rem; font-size: 0.95rem; }
+    .notice.error { background: var(--terracotta-light); color: var(--terracotta-dark); border: 1px solid var(--terracotta); }
+    .notice.info { background: var(--sage-light); color: var(--sage-dark); border: 1px solid var(--sage); }
+    .count { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <i class="fa-solid fa-chalkboard-user"></i>
+        <span>Teacher: Student Submissions</span>
+      </div>
+      <div class="nav-links">
+        <button type="button" id="themeToggle" class="theme-toggle" aria-label="Switch to dark mode"><i class="fa-solid fa-moon"></i></button>
+        <a href="index.html">&larr; Back to course</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <div id="who" class="count" style="margin-bottom:1rem;"></div>
+    <div id="notice"></div>
+
+    <div class="toolbar">
+      <div class="input-group">
+        <label for="dayFilter">Day</label>
+        <select id="dayFilter"></select>
+      </div>
+      <div class="input-group">
+        <label for="searchBox">Search name or email</label>
+        <input type="text" id="searchBox" placeholder="Type to search..." />
+      </div>
+      <button type="button" class="btn btn-primary" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+    </div>
+
+    <div class="count" id="countText"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Student</th><th>Email</th><th>Day</th><th>File</th><th>Size</th><th>Submitted</th><th>Open</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const root = document.documentElement, themeBtn = document.getElementById('themeToggle');
+    function applyTheme(theme) {
+      root.dataset.theme = theme;
+      try { localStorage.setItem('fcsTheme', theme); } catch (e) {}
+      const dark = theme === 'dark';
+      themeBtn.innerHTML = `<i class="fa-solid ${dark ? 'fa-sun' : 'fa-moon'}"></i>`;
+      themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    applyTheme(root.dataset.theme || 'light');
+    requestAnimationFrame(() => root.classList.add('theme-ready'));
+    themeBtn.onclick = () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, query, orderBy, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const app = initializeApp({
+      apiKey: "AIzaSyA0snl6gZzyX3S6KLwosy33o6r7HaqYFlA",
+      authDomain: "aysete-977b1.firebaseapp.com",
+      projectId: "aysete-977b1",
+      storageBucket: "aysete-977b1.firebasestorage.app",
+      messagingSenderId: "766545115988",
+      appId: "1:766545115988:web:d87af7d588af35008f66c1",
+      measurementId: "G-YT62C60KE7"
+    });
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const $ = id => document.getElementById(id);
+    const pad = n => String(n).padStart(2, '0');
+    const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const fmtSize = b => typeof b !== 'number' ? '' : b < 1048576 ? Math.max(1, Math.round(b / 1024)) + ' KB' : (b / 1048576).toFixed(1) + ' MB';
+    const showNotice = (text, type) => { $('notice').innerHTML = text ? `<div class="notice ${type}">${text}</div>` : ''; };
+
+    let allRows = [];
+
+    $('dayFilter').innerHTML = '<option value="all">All days</option>' + Array.from({ length: 10 }, (_, i) => `<option value="${i + 1}">Day ${pad(i + 1)}</option>`).join('');
+
+    function render() {
+      const day = $('dayFilter').value;
+      const term = $('searchBox').value.trim().toLowerCase();
+      const filtered = allRows.filter(r =>
+        (day === 'all' || String(r.dayNum) === day) &&
+        (!term || (r.studentName || '').toLowerCase().includes(term) || (r.email || '').toLowerCase().includes(term)));
+
+      $('countText').textContent = `${filtered.length} submission${filtered.length === 1 ? '' : 's'} shown (of ${allRows.length})`;
+
+      if (!filtered.length) {
+        $('rows').innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem;">No submissions found. If students say they submitted, check Firestore &rarr; Data &rarr; submissions, and ask them to look for a red error message under the Submit button.</td></tr>';
+        return;
+      }
+
+      $('rows').innerHTML = filtered.map(r => `
+        <tr>
+          <td>${esc(r.studentName || '(no name)')}</td>
+          <td>${esc(r.email)}</td>
+          <td>Day ${pad(r.dayNum)}</td>
+          <td class="file"><i class="fa-solid ${r.fileType === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image'}"></i> ${esc(r.fileName)}</td>
+          <td>${esc(fmtSize(r.fileSize))}</td>
+          <td>${esc(r.submittedAt ? new Date(r.submittedAt).toLocaleString() : '')}</td>
+          <td>
+            <button class="act-btn act-view" data-id="${esc(r.id)}" data-mode="view"><i class="fa-solid fa-eye"></i> View</button>
+            <button class="act-btn act-dl" data-id="${esc(r.id)}" data-mode="download"><i class="fa-solid fa-download"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    async function loadSubmissions() {
+      showNotice('Loading submissions...', 'info');
+      try {
+        const snap = await getDocs(query(collection(db, 'submissions'), orderBy('submittedAt', 'desc')));
+        allRows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        showNotice('', '');
+        render();
+      } catch (err) {
+        console.error(err);
+        allRows = [];
+        render();
+        if (err.code === 'permission-denied') {
+          const uid = auth.currentUser ? auth.currentUser.uid : '(not signed in)';
+          showNotice('Access denied. You are signed in as UID <strong>' + esc(uid) + '</strong>. This UID must be exactly the one inside isTeacher() in your Firestore rules, and the rules must be published.', 'error');
+        } else {
+          showNotice('Could not load submissions: ' + esc(err.message), 'error');
+        }
+      }
+    }
+
+    async function openFile(id, mode) {
+      const popup = mode === 'view' ? window.open('', '_blank') : null;
+      try {
+        const snap = await getDoc(doc(db, 'submissionFiles', id));
+        if (!snap.exists()) throw new Error('File not found.');
+        const data = snap.data();
+        const bytes = Uint8Array.from(atob(data.fileData), c => c.charCodeAt(0));
+        const url = URL.createObjectURL(new Blob([bytes], { type: data.fileType }));
+        if (popup) popup.location.href = url;
+        else Object.assign(document.createElement('a'), { href: url, download: data.fileName || 'submission' }).click();
+      } catch (err) {
+        popup?.close();
+        alert('Could not open the file: ' + err.message);
+      }
+    }
+
+    $('rows').addEventListener('click', (e) => {
+      const btn = e.target.closest('.act-btn');
+      if (btn) openFile(btn.dataset.id, btn.dataset.mode);
+    });
+    $('dayFilter').addEventListener('change', render);
+    $('searchBox').addEventListener('input', render);
+    $('refreshBtn').addEventListener('click', loadSubmissions);
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        showNotice('Please <a href="login.html">sign in with the teacher account</a> first, then come back to this page.', 'info');
+        $('rows').innerHTML = '';
+        return;
+      }
+      $('who').innerHTML = 'Signed in as <strong>' + esc(user.email) + '</strong> &middot; UID: ' + esc(user.uid);
+      loadSubmissions();
+    });
+  </script>
+</body>
+</html>

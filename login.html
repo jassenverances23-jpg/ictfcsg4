@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portal | Login & Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="darkmode.css" />
+  <script>
+    try { var saved = localStorage.getItem('fcsTheme'); } catch (e) {}
+    document.documentElement.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  </script>
+</head>
+<body>
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button type="button" class="tab-btn active" id="registerTabBtn">Register</button>
+      <button type="button" class="tab-btn" id="loginTabBtn">Sign In</button>
+      <button type="button" id="themeToggle" class="theme-toggle" aria-label="Switch to dark mode"><i class="fa-solid fa-moon"></i></button>
+    </div>
+
+    <form id="registerForm">
+      <h2>Create Account</h2>
+      <div id="registerError" class="error-msg"></div>
+      <div class="form-group">
+        <label for="regName">Full Name</label>
+        <input type="text" id="regName" placeholder="Enter your full name" required />
+      </div>
+      <div class="form-group">
+        <label for="regEmail">Email Address</label>
+        <input type="email" id="regEmail" placeholder="Enter your email" required />
+      </div>
+      <div class="form-group">
+        <label for="regPassword">Password (6+ characters)</label>
+        <div class="password-field"><input type="password" id="regPassword" placeholder="Create a password" required minlength="6" /></div>
+      </div>
+      <button type="submit" class="auth-btn" id="registerBtn">Register</button>
+    </form>
+
+    <form id="loginForm" hidden>
+      <h2>Student Sign In</h2>
+      <div id="loginSuccess" class="success-msg"></div>
+      <div id="loginError" class="error-msg"></div>
+      <div class="form-group">
+        <label for="loginEmail">Email Address</label>
+        <input type="email" id="loginEmail" placeholder="Enter your email" required />
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <div class="password-field"><input type="password" id="loginPassword" placeholder="Enter your password" required /></div>
+      </div>
+      <button type="submit" class="auth-btn" id="loginBtn">Sign In</button>
+    </form>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    const root = document.documentElement, themeBtn = $('themeToggle');
+    function applyTheme(theme) {
+      root.dataset.theme = theme;
+      try { localStorage.setItem('fcsTheme', theme); } catch (e) {}
+      const dark = theme === 'dark';
+      themeBtn.innerHTML = `<i class="fa-solid ${dark ? 'fa-sun' : 'fa-moon'}"></i>`;
+      themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    applyTheme(root.dataset.theme || 'light');
+    requestAnimationFrame(() => root.classList.add('theme-ready'));
+    themeBtn.onclick = () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+
+    document.querySelectorAll('.password-field').forEach(field => {
+      const input = field.querySelector('input');
+      const btn = Object.assign(document.createElement('button'), { type: 'button', className: 'toggle-password' });
+      const set = show => {
+        input.type = show ? 'text' : 'password';
+        btn.innerHTML = `<i class="fa-solid ${show ? 'fa-eye-slash' : 'fa-eye'}"></i>`;
+        btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      };
+      set(false);
+      btn.onclick = () => set(input.type === 'password');
+      field.appendChild(btn);
+    });
+
+    function switchTab(tab) {
+      $('registerForm').hidden = tab !== 'register';
+      $('loginForm').hidden = tab !== 'login';
+      $('registerTabBtn').classList.toggle('active', tab === 'register');
+      $('loginTabBtn').classList.toggle('active', tab === 'login');
+    }
+    $('registerTabBtn').onclick = () => switchTab('register');
+    $('loginTabBtn').onclick = () => switchTab('login');
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const app = initializeApp({
+      apiKey: "AIzaSyA0snl6gZzyX3S6KLwosy33o6r7HaqYFlA",
+      authDomain: "aysete-977b1.firebaseapp.com",
+      projectId: "aysete-977b1",
+      storageBucket: "aysete-977b1.firebasestorage.app",
+      messagingSenderId: "766545115988",
+      appId: "1:766545115988:web:d87af7d588af35008f66c1",
+      measurementId: "G-YT62C60KE7"
+    });
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const errors = {
+      'auth/email-already-in-use': 'That email is already registered. Please sign in.',
+      'auth/invalid-email': 'Please enter a valid email address.',
+      'auth/weak-password': 'Password must be at least 6 characters.',
+      'auth/operation-not-allowed': 'Email/Password sign-in is not enabled in Firebase.',
+      'auth/invalid-credential': 'Invalid email or password.',
+      'auth/wrong-password': 'Invalid email or password.',
+      'auth/user-not-found': 'Invalid email or password.'
+    };
+    const friendlyError = e => errors[e.code] || e.message;
+
+    $('registerForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const name = $('regName').value.trim(), email = $('regEmail').value.trim();
+      const errBox = $('registerError'), btn = $('registerBtn');
+      errBox.innerText = '';
+      btn.disabled = true;
+      try {
+        const { user } = await createUserWithEmailAndPassword(auth, email, $('regPassword').value);
+        await updateProfile(user, { displayName: name });
+        try {
+          await setDoc(doc(db, "users", user.uid), { name, email, createdAt: new Date().toISOString() });
+        } catch (dbErr) {
+          console.warn('Could not save user profile to Firestore:', dbErr);
+        }
+        await signOut(auth);
+
+        $('registerForm').reset();
+        switchTab('login');
+        $('loginEmail').value = email;
+        $('loginError').innerText = '';
+        const ok = $('loginSuccess');
+        ok.innerText = 'Registration successful! Please sign in.';
+        ok.style.display = 'block';
+        $('loginPassword').focus();
+      } catch (error) {
+        errBox.innerText = friendlyError(error);
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    $('loginForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const errBox = $('loginError'), btn = $('loginBtn');
+      errBox.innerText = '';
+      $('loginSuccess').style.display = 'none';
+      btn.disabled = true;
+      try {
+        await signInWithEmailAndPassword(auth, $('loginEmail').value.trim(), $('loginPassword').value);
+        location.href = 'index.html';
+      } catch (error) {
+        errBox.innerText = friendlyError(error);
+        btn.disabled = false;
+      }
+    };
+  </script>
+</body>
+</html>

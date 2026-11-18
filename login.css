@@ -1,0 +1,210 @@
+:root {
+  --bg-cream: #FFF4EA;
+  --surface-white: #FFFBF7;
+  --text-dark: #3A2E25;
+  --text-muted: #6B5A4B;
+
+  --sage: #997E67;
+  --sage-light: #FFDBBB;
+  --sage-dark: #765F4C;
+
+  --terracotta: #7D614A;
+  --terracotta-light: #FFEBD8;
+  --terracotta-dark: #4F3C2E;
+
+  --border-color: #EBD3BD;
+  --shadow-md: 0 8px 24px rgba(60, 44, 32, 0.12);
+  --radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, var(--sage-light) 0%, var(--bg-cream) 60%, var(--terracotta-light) 100%);
+  color: var(--text-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  color: var(--text-dark);
+  line-height: 1.25;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--surface-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.35rem;
+  margin-bottom: 1.75rem;
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-color);
+  border-radius: 50px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 50px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tab-btn:hover:not(.active) {
+  color: var(--terracotta);
+}
+
+.tab-btn.active {
+  background-color: var(--sage);
+  color: #FFFFFF;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.1rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.form-group input {
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--bg-cream);
+  color: var(--text-dark);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+}
+
+.form-group input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--terracotta);
+  background-color: var(--surface-white);
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 0.8rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--terracotta);
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.auth-btn:hover:not(:disabled) {
+  background-color: var(--terracotta-dark);
+}
+
+.auth-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.error-msg,
+.success-msg {
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.error-msg {
+  background-color: var(--terracotta-light);
+  color: var(--terracotta-dark);
+  border: 1px solid var(--terracotta);
+}
+
+.error-msg:empty {
+  display: none;
+}
+
+.success-msg {
+  display: none;
+  background-color: var(--sage-light);
+  color: var(--sage-dark);
+  border: 1px solid var(--sage);
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 2.75rem;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+  color: var(--terracotta);
+}
+
+.toggle-password:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 1px;
+}
+
+.auth-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}

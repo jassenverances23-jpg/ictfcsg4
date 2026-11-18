@@ -1,0 +1,141 @@
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-cream: #1E1712;
+  --surface-white: #2A2119;
+  --text-dark: #F3E6D8;
+  --text-muted: #BFA992;
+
+  --sage: #997E67;
+  --sage-light: #3B2E23;
+  --sage-dark: #FFDBBB;
+
+  --terracotta: #B58E6D;
+  --terracotta-light: #34281E;
+  --terracotta-dark: #FFDBBB;
+
+  --border-color: #46372B;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .navbar {
+  background: rgba(30, 23, 18, 0.92);
+}
+
+:root[data-theme="dark"] .nav-links a.nav-btn,
+:root[data-theme="dark"] .filter-btn.active,
+:root[data-theme="dark"] .open-module-btn,
+:root[data-theme="dark"] .ws-day-tab.active,
+:root[data-theme="dark"] .complete-day-btn,
+:root[data-theme="dark"] .btn-primary,
+:root[data-theme="dark"] .view-file-btn {
+  background-color: #7D614A;
+  color: #FFFFFF;
+}
+
+:root[data-theme="dark"] .nav-links a.nav-btn:hover,
+:root[data-theme="dark"] .open-module-btn:hover:not(:disabled),
+:root[data-theme="dark"] .complete-day-btn:hover:not(:disabled),
+:root[data-theme="dark"] .btn-primary:hover,
+:root[data-theme="dark"] .view-file-btn:hover {
+  background-color: #997E67;
+  color: #FFFFFF;
+}
+
+:root[data-theme="dark"] .filter-btn.active,
+:root[data-theme="dark"] .ws-day-tab.active {
+  border-color: #997E67;
+}
+
+:root[data-theme="dark"] .open-module-btn.is-completed,
+:root[data-theme="dark"] .complete-day-btn.is-completed {
+  background-color: var(--sage-light);
+  color: var(--sage-dark);
+  border: 1px solid var(--sage);
+}
+
+:root[data-theme="dark"] .open-module-btn.is-completed:hover {
+  background-color: #7D614A;
+  color: #FFFFFF;
+}
+
+:root[data-theme="dark"] .module-card.card-locked {
+  background-color: #231B15;
+}
+
+:root[data-theme="dark"] .open-module-btn.is-locked {
+  background-color: #33281F;
+  color: #8A7663;
+}
+
+:root[data-theme="dark"] .ws-day-tab.locked {
+  background-color: #2D241C;
+  color: #8A7663;
+}
+
+:root[data-theme="dark"] .status-tag.locked {
+  color: #A08B77;
+}
+
+:root[data-theme="dark"] .footer {
+  background-color: #2A2119;
+  color: var(--text-muted);
+}
+
+:root[data-theme="dark"] .hero {
+  background: linear-gradient(135deg, #2E231A 0%, var(--bg-cream) 60%, #2A1F16 100%);
+}
+
+:root[data-theme="dark"] .input-group input,
+:root[data-theme="dark"] .input-group select,
+:root[data-theme="dark"] .submit-box textarea {
+  color: var(--text-dark);
+  background-color: #1E1712;
+}
+
+:root[data-theme="dark"] .input-group input:focus,
+:root[data-theme="dark"] .input-group select:focus {
+  background-color: var(--surface-white);
+}
+
+:root[data-theme="dark"] .lesson-html img,
+:root[data-theme="dark"] .submit-preview img {
+  filter: brightness(0.92);
+}
+
+.theme-toggle {
+  background: var(--surface-white);
+  border: 1px solid var(--border-color);
+  color: var(--text-dark);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--terracotta);
+  color: var(--terracotta);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 2px;
+}
+
+html.theme-ready body,
+html.theme-ready .navbar,
+html.theme-ready .module-card,
+html.theme-ready .standard-card,
+html.theme-ready .tool-card,
+html.theme-ready .task-card,
+html.theme-ready .module-workspace,
+html.theme-ready .progress-tracker {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}

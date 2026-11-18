@@ -130,6 +130,9 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Must match the UID in isTeacher() in your Firestore rules.
+    const TEACHER_UID = 'nYt6kzLCE0MjEFGSP0h8t06o1zQ2';
+
     const errors = {
       'auth/email-already-in-use': 'That email is already registered. Please sign in.',
       'auth/invalid-email': 'Please enter a valid email address.',
@@ -186,9 +189,6 @@
         btn.disabled = false;
       }
     };
-
-    // Teacher sign-in: accounts are created by an admin (no public registration).
-    // After signing in, the user's Firestore profile must have role === 'teacher'.
     $('teacherForm').onsubmit = async (e) => {
       e.preventDefault();
       const errBox = $('teacherError'), btn = $('teacherBtn');
@@ -196,14 +196,7 @@
       btn.disabled = true;
       try {
         const { user } = await signInWithEmailAndPassword(auth, $('teacherEmail').value.trim(), $('teacherPassword').value);
-        let role = null;
-        try {
-          const snap = await getDoc(doc(db, "users", user.uid));
-          role = snap.exists() ? snap.data().role : null;
-        } catch (dbErr) {
-          console.warn('Could not read user profile from Firestore:', dbErr);
-        }
-        if (role !== 'teacher') {
+        if (user.uid !== TEACHER_UID) {
           await signOut(auth);
           errBox.innerText = 'This account does not have teacher access.';
           btn.disabled = false;

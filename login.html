@@ -20,6 +20,7 @@
     <div class="auth-tabs">
       <button type="button" class="tab-btn active" id="registerTabBtn">Register</button>
       <button type="button" class="tab-btn" id="loginTabBtn">Sign In</button>
+      <button type="button" class="tab-btn" id="teacherTabBtn">Teacher</button>
       <button type="button" id="themeToggle" class="theme-toggle" aria-label="Switch to dark mode"><i class="fa-solid fa-moon"></i></button>
     </div>
 
@@ -55,6 +56,20 @@
       </div>
       <button type="submit" class="auth-btn" id="loginBtn">Sign In</button>
     </form>
+
+    <form id="teacherForm" hidden>
+      <h2>Teacher Sign In</h2>
+      <div id="teacherError" class="error-msg"></div>
+      <div class="form-group">
+        <label for="teacherEmail">Email Address</label>
+        <input type="email" id="teacherEmail" placeholder="Enter your school email" required />
+      </div>
+      <div class="form-group">
+        <label for="teacherPassword">Password</label>
+        <div class="password-field"><input type="password" id="teacherPassword" placeholder="Enter your password" required /></div>
+      </div>
+      <button type="submit" class="auth-btn" id="teacherBtn">Sign In as Teacher</button>
+    </form>
   </div>
 
   <script>
@@ -88,17 +103,20 @@
     function switchTab(tab) {
       $('registerForm').hidden = tab !== 'register';
       $('loginForm').hidden = tab !== 'login';
+      $('teacherForm').hidden = tab !== 'teacher';
       $('registerTabBtn').classList.toggle('active', tab === 'register');
       $('loginTabBtn').classList.toggle('active', tab === 'login');
+      $('teacherTabBtn').classList.toggle('active', tab === 'teacher');
     }
     $('registerTabBtn').onclick = () => switchTab('register');
     $('loginTabBtn').onclick = () => switchTab('login');
+    $('teacherTabBtn').onclick = () => switchTab('teacher');
   </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const app = initializeApp({
       apiKey: "AIzaSyA0snl6gZzyX3S6KLwosy33o6r7HaqYFlA",
@@ -133,7 +151,7 @@
         const { user } = await createUserWithEmailAndPassword(auth, email, $('regPassword').value);
         await updateProfile(user, { displayName: name });
         try {
-          await setDoc(doc(db, "users", user.uid), { name, email, createdAt: new Date().toISOString() });
+          await setDoc(doc(db, "users", user.uid), { name, email, role: 'student', createdAt: new Date().toISOString() });
         } catch (dbErr) {
           console.warn('Could not save user profile to Firestore:', dbErr);
         }
@@ -163,6 +181,35 @@
       try {
         await signInWithEmailAndPassword(auth, $('loginEmail').value.trim(), $('loginPassword').value);
         location.href = 'index.html';
+      } catch (error) {
+        errBox.innerText = friendlyError(error);
+        btn.disabled = false;
+      }
+    };
+
+    // Teacher sign-in: accounts are created by an admin (no public registration).
+    // After signing in, the user's Firestore profile must have role === 'teacher'.
+    $('teacherForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const errBox = $('teacherError'), btn = $('teacherBtn');
+      errBox.innerText = '';
+      btn.disabled = true;
+      try {
+        const { user } = await signInWithEmailAndPassword(auth, $('teacherEmail').value.trim(), $('teacherPassword').value);
+        let role = null;
+        try {
+          const snap = await getDoc(doc(db, "users", user.uid));
+          role = snap.exists() ? snap.data().role : null;
+        } catch (dbErr) {
+          console.warn('Could not read user profile from Firestore:', dbErr);
+        }
+        if (role !== 'teacher') {
+          await signOut(auth);
+          errBox.innerText = 'This account does not have teacher access.';
+          btn.disabled = false;
+          return;
+        }
+        location.href = 'teacher.html';
       } catch (error) {
         errBox.innerText = friendlyError(error);
         btn.disabled = false;

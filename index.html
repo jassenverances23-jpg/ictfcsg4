@@ -212,24 +212,90 @@
       days: days.map(([dayNum, t, summary, activities]) => ({ dayNum, title: `Day ${pad(dayNum)}: ${t}`, summary, activities }))
     }));
 
-const lessonContent = {
-  1: {
-    slides: '',   // Google Slides embed link
-    video:  '',   // YouTube embed link
-    html:   '',   // Notes / text (HTML allowed)
-    file:   'https://uou.ac.in/sites/default/files/slm/ETS-102.pdf', // PDF/Doc link
-    task:   ''    // Submission instructions (optional)
-  },
-  2:  { slides: '', video: '', html: 'https://www.scribd.com/document/1035989207/Grade-7-Ict-Module1-Sectors-Careers-And-Opportunities.com', file:'', task: '' },
-  3:  { slides: '', video: '', html: 'https://www.slideshare.net/slideshow/career-opportunities-in-the-hospitality-industry/257314291.com', file: '', task: '' },
-  4:  { slides: '', video: '', html: '', file: '', task: '' },
-  5:  { slides: '', video: '', html: '', file: '', task: '' },
-  6:  { slides: '', video: '', html: '', file: '', task: '' },
-  7:  { slides: '', video: '', html: '', file: '', task: '' },
-  8:  { slides: '', video: '', html: '', file: '', task: '' },
-  9:  { slides: '', video: '', html: '', file: '', task: '' },
-  10: { slides: '', video: '', html: '', file: '', task: '' }
-};
+    /* =====================================================================
+       LESSON CONTENT  (edit this block only)
+       Fill any field you want per day. Empty ('') fields are skipped.
+       If ALL fields of a day are empty, the "coming soon" placeholder shows.
+
+       slides : Google Slides embed link  (File > Share > Publish to web > Embed, copy the src URL)
+       video  : YouTube embed link        (https://www.youtube.com/embed/VIDEO_ID)
+       html   : Notes shown on the page   (HTML allowed; use backticks for multi-line)
+       file   : Link to a PDF / document  (shows an "Open Lesson File" button)
+       task   : Submission instructions   (leave '' for the default message)
+       ===================================================================== */
+    const lessonContent = {
+      1: {
+        slides: '',
+        video: '',
+        html: '',
+        file: 'https://uou.ac.in/sites/default/files/slm/ETS-102.pdf',
+        task: ''
+      },
+      2: {
+        slides: '',
+        video: '',
+        html: 'https://www.slideshare.net/slideshow/career-opportunities-in-the-hospitality-industry/257314291',
+        file: '',
+        task: ''
+      },
+      3: {
+        slides: '',
+        video: '',
+        html: 'https://www.scribd.com/document/1035989207/Grade-7-Ict-Module1-Sectors-Careers-And-Opportunities',
+        file: '',
+        task: ''
+      },
+      4: {
+        slides: '',
+        video: '',
+        html: '',
+        file: '',
+        task: ''
+      },
+      5: {
+        slides: '',
+        video: '',
+        html: '',
+        file: '',
+        task: ''
+      },
+      6: {
+        slides: '',
+        video: '',
+        html: '',
+        file: '',
+        task: ''
+      },
+      7: {
+        slides: '',
+        video: '',
+        html: '',
+        file: '',
+        task: ''
+      },
+      8: {
+        slides: '',
+        video: '',
+        html: '',
+        file: '',
+        task: ''
+      },
+      9: {
+        slides: '',
+        video: '',
+        html: '',
+        file: '',
+        task: ''
+      },
+      10: {
+        slides: '',
+        video: '',
+        html: '',
+        file: '',
+        task: ''
+      }
+    };
+
     const standards = [
       ['sage', 'fa-shield-halved', 'Performance Standard', 'Apply essential skills in food preparation and services following safety precautions and industry standards.'],
       ['terracotta', 'fa-concierge-bell', 'Content Standard', 'Demonstrate a clear understanding of the core fundamentals, sectors, and operations within the hospitality and tourism industry.']
@@ -319,12 +385,14 @@ const lessonContent = {
 
     function lessonSection(day) {
       const c = lessonContent[day.dayNum] || {};
-      const embed = (src, title) => `<div class="lesson-embed"><iframe src="${src}" allowfullscreen loading="lazy" title="${title}"></iframe></div>`;
-      const body = (c.slides ? embed(c.slides, 'Lesson slides') : '')
-        + (c.video ? embed(c.video, 'Lesson video') : '')
-        + (c.html ? `<div class="lesson-html">${c.html}</div>` : '')
-        + (c.file ? `<a href="${c.file}" target="_blank" rel="noopener" class="btn btn-primary lesson-download"><i class="fa-solid fa-file-arrow-down"></i> Open Lesson File</a>` : '')
-        || `<div class="lesson-placeholder"><i class="fa-solid fa-book-open-reader"></i><strong>Lesson for Day ${pad(day.dayNum)} coming soon</strong>Your teacher will add the lesson slides, video and notes here.</div>`;
+      const embed = (src, title) => `<div class="lesson-embed"><iframe src="${esc(src)}" allowfullscreen loading="lazy" title="${title}"></iframe></div>`;
+      const parts = [
+        c.slides ? embed(c.slides, 'Lesson slides') : '',
+        c.video ? embed(c.video, 'Lesson video') : '',
+        c.html ? `<div class="lesson-html">${c.html}</div>` : '',
+        c.file ? `<a href="${esc(c.file)}" target="_blank" rel="noopener" class="btn btn-primary lesson-download"><i class="fa-solid fa-file-arrow-down"></i> Open Lesson File</a>` : ''
+      ].join('');
+      const body = parts || `<div class="lesson-placeholder"><i class="fa-solid fa-book-open-reader"></i><strong>Lesson for Day ${pad(day.dayNum)} coming soon</strong>Your teacher will add the lesson slides, video and notes here.</div>`;
       return `<div class="ws-activities-box lesson-box"><h4><i class="fa-solid fa-chalkboard-user"></i> Lesson Content</h4>${body}</div>`;
     }
 

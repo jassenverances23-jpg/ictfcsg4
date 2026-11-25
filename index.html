@@ -212,10 +212,24 @@
       days: days.map(([dayNum, t, summary, activities]) => ({ dayNum, title: `Day ${pad(dayNum)}: ${t}`, summary, activities }))
     }));
 
-    const lessonContent = {
-      1: { file: 'https://uou.ac.in/sites/default/files/slm/ETS-102.pdf' }
-      2: { file: 'https://uou.ac.in/sites/default/files/slm/ETS-102.pdf' }
-    };
+const lessonContent = {
+  1: {
+    slides: '',   // Google Slides embed link
+    video:  '',   // YouTube embed link
+    html:   '',   // Notes / text (HTML allowed)
+    file:   'https://uou.ac.in/sites/default/files/slm/ETS-102.pdf', // PDF/Doc link
+    task:   ''    // Submission instructions (optional)
+  },
+  2:  { slides: '', video: '', html: '', file: 'https://uou.ac.in/sites/default/files/slm/ETS-102.pdf', task: '' },
+  3:  { slides: '', video: '', html: '', file: '', task: '' },
+  4:  { slides: '', video: '', html: '', file: '', task: '' },
+  5:  { slides: '', video: '', html: '', file: '', task: '' },
+  6:  { slides: '', video: '', html: '', file: '', task: '' },
+  7:  { slides: '', video: '', html: '', file: '', task: '' },
+  8:  { slides: '', video: '', html: '', file: '', task: '' },
+  9:  { slides: '', video: '', html: '', file: '', task: '' },
+  10: { slides: '', video: '', html: '', file: '', task: '' }
+};
     const standards = [
       ['sage', 'fa-shield-halved', 'Performance Standard', 'Apply essential skills in food preparation and services following safety precautions and industry standards.'],
       ['terracotta', 'fa-concierge-bell', 'Content Standard', 'Demonstrate a clear understanding of the core fundamentals, sectors, and operations within the hospitality and tourism industry.']
